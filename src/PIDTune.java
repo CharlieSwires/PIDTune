@@ -45,6 +45,14 @@ public class PIDTune extends JPanel{
     static PIDTune pt;
     float angle1;
     float angle2;
+    
+    /**
+     * The guts of it initialise the chromasomes, then try each one
+     * then loop through the scenarios then breed the next 100 with
+     * mutation
+     * @author charl
+     *
+     */
     class PIDThread extends Thread{
         float delta_time = (float)(1000*1.0/60.0);
         float Kp = 1.0f;
@@ -62,14 +70,23 @@ public class PIDTune extends JPanel{
                 chromasome[j][3] = 1000000.0f;
             }
             float closest = 1000000f;
+            /**
+             * Iteration loop
+             */
             for(int iteration = 0; iteration < 1000 && closest > 0.1f; iteration++) {
                 int i = 0;
+                /**
+                 * chromasome loop
+                 */
                 while(i < 100) {
                     Kp = chromasome[i][0];
                     Ki = chromasome[i][1];
                     Kd = chromasome[i][2];
-                    rand = new Random(0);  
+                    rand = new Random(0);//so scenarios are the same
                     float sumDist = 0.0f;
+                    /** 
+                     * senario loop
+                     */
                     for (int k = 0; k < 20 ; k++) {
                         initTestScene();
                         closest = 1000000f;
@@ -79,6 +96,7 @@ public class PIDTune extends JPanel{
                         float derivative_of_error2 = 0.0f;
               
                         int l = 0;
+                        //20s at 60fps
                         while(l++ < 1200) {
                             //Date currentTime = new Date();
                             float distToTarget = testScene();
@@ -93,7 +111,7 @@ public class PIDTune extends JPanel{
                             updateTestScene();
                             pt.repaint();
 
-                            if (distToTarget < closest) {
+                            if (distToTarget < closest) { //closest pass
                                 closest = distToTarget;
                             }
 //                                                    try {
@@ -117,7 +135,7 @@ public class PIDTune extends JPanel{
 //                     } 
 //                     }
 //                    start = !start;
-                    chromasome[i][3] = sumDist;
+                    chromasome[i][3] = sumDist; //sum of closest pass
                     i++;
                     init();
                 }
@@ -126,6 +144,7 @@ public class PIDTune extends JPanel{
                 int secClosestJ = -1;
                 float secDistClosest = 1000000f;
                 for (int j = 0; j < 100; j++) {
+                    //scan for first and second place slightly wrong
                     if (chromasome[j][3] < distClosest) {
                         secDistClosest = distClosest;
                         secClosestJ = closestJ;
@@ -139,7 +158,9 @@ public class PIDTune extends JPanel{
                     secClosestJ = closestJ;
                     secDistClosest = distClosest;
                 }
-                // breed/mutate
+                /**
+                 * breed mutate
+                 */
                 for (int j = 0; j < 100; j++) {
 
                     float result[] = new float[4];
@@ -156,6 +177,9 @@ public class PIDTune extends JPanel{
 
             }
         }
+        /**
+         * initialise flights
+         */
         private void initTestScene() {
             cx = (rand.nextFloat()-0.5f) * 100.0f;
             cy = (rand.nextFloat()-0.5f) * 100.0f;
@@ -170,6 +194,10 @@ public class PIDTune extends JPanel{
             pvy = (rand.nextFloat()-0.5f) * 10.0f;
             pvz = (rand.nextFloat()-0.5f) * 10.0f;          
         }
+        /**
+         * convert capsule - missile to two angles spherical coord
+         * @return
+         */
         private float testScene() {
             cx += cvx;
             cy += cvy;
@@ -184,6 +212,9 @@ public class PIDTune extends JPanel{
             return (float)Math.sqrt((cx-px)*(cx-px)+(cy-py)*(cy-py)+(cz-pz)*(cz-pz));
 
         }
+        /**
+         * convert outputs back to vector form and add to capsule - missile
+         */
         private void updateTestScene() {
             pvx = (float) (Math.sin(Math.PI*output/180.0)*Math.cos(Math.PI*output2/180.0));
             pvy = (float) (Math.sin(Math.PI*output/180.0)*Math.sin(Math.PI*output2/180.0));
@@ -206,6 +237,9 @@ public class PIDTune extends JPanel{
     List<Integer> xlistp;
     List<Integer> ylistp;
     Date startTime;
+    /**
+     * init graphics
+     */
     public void init() {
         xlistc = new ArrayList<Integer>();
         ylistc = new ArrayList<Integer>();
@@ -213,6 +247,9 @@ public class PIDTune extends JPanel{
         ylistp = new ArrayList<Integer>();
         startTime = new Date();
     }
+    /**
+     * paint angle vs output over time
+     */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -237,6 +274,11 @@ public class PIDTune extends JPanel{
                 (int)(5));
         }
     }
+    /**
+     * Set up the screen
+     * @author charl
+     *
+     */
     class PaintDemo{
 
         PaintDemo(){
@@ -265,6 +307,10 @@ public class PIDTune extends JPanel{
         }
     }
 
+    /**
+     * Kick it all off
+     * @param args
+     */
     public static void main(String[] args) {
         pt = new PIDTune();
         PIDThread thread = pt.new PIDThread();
