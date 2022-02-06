@@ -45,7 +45,7 @@ public class PIDTune extends JPanel{
     static PIDTune pt;
     float angle1;
     float angle2;
-    
+
     /**
      * The guts of it initialise the chromasomes, then try each one
      * then loop through the scenarios then breed the next 100 with
@@ -94,7 +94,7 @@ public class PIDTune extends JPanel{
                         float derivative_of_error = 0.0f;
                         float accumulation_of_error2 = 0.0f;
                         float derivative_of_error2 = 0.0f;
-              
+
                         int l = 0;
                         //20s at 60fps
                         while(l++ < 1200) {
@@ -114,27 +114,27 @@ public class PIDTune extends JPanel{
                             if (distToTarget < closest) { //closest pass
                                 closest = distToTarget;
                             }
-//                                                    try {
-//                                                        Thread.sleep((long)(2));
-//                                                    } catch (InterruptedException e) {
-//                                                        // TODO Auto-generated catch block
-//                                                        e.printStackTrace();
-//                                                    }
+                            //                                                    try {
+                            //                                                        Thread.sleep((long)(2));
+                            //                                                    } catch (InterruptedException e) {
+                            //                                                        // TODO Auto-generated catch block
+                            //                                                        e.printStackTrace();
+                            //                                                    }
                             //Date afterTime = new Date();
                             delta_time = 1.0f / 60.0f;//(float)((afterTime.getTime() - currentTime.getTime())/1000.0f);
                         }
                         sumDist += closest;
-                        
+
                     }
-//                    while(!start) {
-//                        try {
-//                         Thread.sleep(10);
-//                     } catch (InterruptedException e) {
-//                         // TODO Auto-generated catch block
-//                         e.printStackTrace();
-//                     } 
-//                     }
-//                    start = !start;
+                    //                    while(!start) {
+                    //                        try {
+                    //                         Thread.sleep(10);
+                    //                     } catch (InterruptedException e) {
+                    //                         // TODO Auto-generated catch block
+                    //                         e.printStackTrace();
+                    //                     } 
+                    //                     }
+                    //                    start = !start;
                     chromasome[i][3] = sumDist; //sum of closest pass
                     i++;
                     init();
@@ -230,7 +230,7 @@ public class PIDTune extends JPanel{
             py += (dcpy + pvy) * thrust /60.0f;
             pz += (dcpz + pvz) * thrust /60.0f;
         }
- 
+
     }
     List<Integer> xlistc;
     List<Integer> ylistc;
@@ -263,13 +263,28 @@ public class PIDTune extends JPanel{
         xlistp.add((int)//((new Date()).getTime()-startTime.getTime()));
                 (width / 2.0 + output/10));
         ylistp.add((int)(height / 2.0 -output2/10));
-        for(int i = 0; i < xlistc.size();i++) {
-        g.setColor(Color.RED);
-        g.drawChars((""+i).toCharArray(), 0,(""+i).toCharArray().length, xlistp.get(i), 
-                ylistp.get(i));
-        g.setColor(Color.GREEN);
-        g.drawChars((""+i).toCharArray(), 0,(""+i).toCharArray().length, (int)xlistc.get(i), 
-                (int)ylistc.get(i));
+        for(int i = 1; i < xlistc.size();i++) {
+            g.setColor(Color.RED);
+            try {
+                g.drawLine(xlistp.get(i-1), 
+                        ylistp.get(i-1),xlistp.get(i), 
+                        ylistp.get(i));
+                g.drawChars((""+i).toCharArray(), 0,(""+i).toCharArray().length, xlistp.get(i), 
+                        ylistp.get(i));
+            } catch (Exception e) {
+
+            }
+            g.setColor(Color.GREEN);
+            try {
+                g.drawLine((int)xlistc.get(i-1), 
+                        (int)ylistc.get(i-1),(int)xlistc.get(i), 
+                        (int)ylistc.get(i));
+                g.drawChars((""+i).toCharArray(), 0,(""+i).toCharArray().length, (int)xlistc.get(i), 
+                        (int)ylistc.get(i));
+            } catch (Exception e) {
+
+            }
+
         }
     }
     /**
@@ -290,10 +305,10 @@ public class PIDTune extends JPanel{
             go.addActionListener(new ActionListener() {
 
                 public void actionPerformed(ActionEvent e) {
-                    
-                        start = !start;   
-                    
-                 }
+
+                    start = !start;   
+
+                }
 
             });
             temp.add(go);
