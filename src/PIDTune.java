@@ -257,21 +257,19 @@ public class PIDTune extends JPanel{
         int width = getWidth();
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, width, height);
-        xlistc.add((int)((new Date()).getTime()-startTime.getTime()));//(width / 2.0 + angle1/10));
+        xlistc.add((int)//((new Date()).getTime()-startTime.getTime()));
+                (width / 2.0 + angle1/10));
         ylistc.add((int)(height / 2.0 -angle2/10));
-        xlistp.add((int)((new Date()).getTime()-startTime.getTime()));//(width / 2.0 + output/10));
+        xlistp.add((int)//((new Date()).getTime()-startTime.getTime()));
+                (width / 2.0 + output/10));
         ylistp.add((int)(height / 2.0 -output2/10));
         for(int i = 0; i < xlistc.size();i++) {
         g.setColor(Color.RED);
-        g.fillRect( xlistp.get(i), 
-                ylistp.get(i),
-                (int)(5), 
-                (int)(5));
+        g.drawChars((""+i).toCharArray(), 0,(""+i).toCharArray().length, xlistp.get(i), 
+                ylistp.get(i));
         g.setColor(Color.GREEN);
-        g.fillRect(xlistc.get(i), 
-                ylistc.get(i),
-                (int)(5), 
-                (int)(5));
+        g.drawChars((""+i).toCharArray(), 0,(""+i).toCharArray().length, (int)xlistc.get(i), 
+                (int)ylistc.get(i));
         }
     }
     /**
